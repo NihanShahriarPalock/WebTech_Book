@@ -57,51 +57,7 @@ function validateUserEdit() {
   }
 }
 
-function validateForgotPassword() {
-  const emailInput = document.getElementById("email");
-  const emailValue = emailInput.value;
-  const emailError = document.getElementById("email_error");
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (emailValue.trim() === "") {
-    emailError.innerHTML = "Email is required";
-    return false;
-  } else if (!emailPattern.test(emailValue)) {
-    emailError.innerHTML = "Invalid email format";
-    return false;
-  } else {
-    emailError.innerHTML = "";
-    return true;
-  }
-}
-
-function validateContentWriterLogin() {
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value.trim();
-  const usernameError = document.getElementById("username_error");
-  const passwordError = document.getElementById("password_error");
-  let isValid = true;
-
-  if (username === "") {
-    usernameError.textContent = "Username is required";
-    isValid = false;
-  } else {
-    usernameError.textContent = "";
-  }
-
-  // Validate password
-  if (password === "") {
-    passwordError.textContent = "Password is required";
-    isValid = false;
-  } else {
-    passwordError.textContent = "";
-  }
-
-  return isValid;
-}
 
 function validateLoginForm() {
   const usernameInput = document.getElementById("username");
@@ -145,35 +101,6 @@ function validateForm() {
   const emailError = document.getElementById("email_error");
 
   let isValid = true;
-
-  // Reset errors
-  usernameError.innerHTML = "";
-  passwordError.innerHTML = "";
-  confirmPasswordError.innerHTML = "";
-  emailError.innerHTML = "";
-
-  if (!username.trim()) {
-    usernameError.innerHTML = "Please enter a username";
-    isValid = false;
-  }
-
-  if (!password.trim()) {
-    passwordError.innerHTML = "Please enter a password";
-    isValid = false;
-  }
-
-  if (password !== confirmPassword) {
-    confirmPasswordError.innerHTML = "Passwords do not match";
-    isValid = false;
-  }
-
-  if (!email.trim()) {
-    emailError.innerHTML = "Please enter an email";
-    isValid = false;
-  } else if (!validateEmail(email)) {
-    emailError.innerHTML = "Please enter a valid email";
-    isValid = false;
-  }
 
   return isValid;
 }

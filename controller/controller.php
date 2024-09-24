@@ -28,9 +28,7 @@ function handleAction($action) {
         case 'logout':
             logout();
             break;
-        case 'forgot_password':
-            forgotPassword();
-            break;
+   
             case 'adminProfileInfo':
              require_once '../webtech_project/view/admin_profile.php';
             break;
@@ -105,20 +103,6 @@ function showSalesHistory() {
     require_once '../webtech_project/view/sales_history.php';
 }
 
-function getTotalSales() {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->query("SELECT SUM(sales_price) AS total_sales FROM sales");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total_sales'];
-    } catch(PDOException $e) {
-        echo "Error retrieving total sales: " . $e->getMessage();
-        return false;
-    }
-}
-
-
-
 
 function manageBooks() {
     // Check if the current user is an admin
@@ -148,20 +132,7 @@ function isAdmin() {
     return false;
 }
 
-function forgotPassword() {
-    $email = $_POST['email'];
-    $user = getUserByEmail($email);
-    
-    if ($user) {
-        $token = bin2hex(random_bytes(20));
-        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
-        updateUserResetToken($email, $token, $expires);
-        // Send email with reset link
-        echo "An email with password reset instructions has been sent to $email.";
-    } else {
-        echo "No user found with that email address.";
-    }
-}
+
 
 function resetPassword() {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -182,9 +153,6 @@ function resetPassword() {
     }
 }
 
-function showForgotPasswordForm() {
-    require_once '../webtech_project/view/forgot_password.php';
-}
 
 
 function showHomePage() {

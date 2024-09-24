@@ -5,7 +5,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     
 <style>
-  <?php include "style.css" ?>
+  <?php include "sales_history.css" ?>
 </style>
 <script>
      <?php include "script.js" ?>
@@ -37,7 +37,7 @@
         <p>No sales history found.</p>
     <?php endif; ?>
 
-    <a href="index.php">Back to Home</a>
+    <a href="index.php?action=profile">Back to Home</a>
   </div>
 </body>
 </html>

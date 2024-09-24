@@ -5,7 +5,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     
 <style>
-  <?php include "style.css" ?>
+  <?php include "add_delivery_man.css" ?>
 </style>
 <script>
      <?php include "script.js" ?>

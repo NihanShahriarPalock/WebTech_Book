@@ -4,7 +4,7 @@
     <title>Edit User</title>
      
 <style>
-  <?php include "style.css" ?>
+  <?php include "edit_user.css" ?>
 </style>
 <script>
      <?php include "script.js" ?>
@@ -23,14 +23,14 @@
         </div>
         <div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>">
+            <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>" readonly>
             <span id="email_error" style="color: red;"></span>
         </div>
         <div>
             <label for="role">Role:</label>
             <select id="role" name="role">
                 <option value="admin" <?php echo ($user['role'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
-                <option value="content_writer" <?php echo ($user['role'] == 'content_writer') ? 'selected' : ''; ?>>Content Writer</option>
+             
                 <option value="user" <?php echo ($user['role'] == 'user') ? 'selected' : ''; ?>>User</option>
                 <option value="delivery_man" <?php echo ($user['role'] == 'delivery_man') ? 'selected' : ''; ?>>Delivery Man</option>
             </select>

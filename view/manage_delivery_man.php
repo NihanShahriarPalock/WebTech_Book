@@ -37,7 +37,7 @@
                 <td><?php echo $deliveryMan['username']; ?></td>
                 <td><?php echo $deliveryMan['email']; ?></td>
                 <td>
-                    <a href="index.php?action=ban_delivery_man&username=<?php echo $deliveryMan['username']; ?>">Ban</a>
+                    <a href="index.php?action=ban_delivery_man&username=<?php echo $deliveryMan['username']; ?>">Delete</a>
                 </td>
             </tr>
         <?php endforeach; ?>

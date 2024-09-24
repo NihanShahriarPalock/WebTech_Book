@@ -5,7 +5,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
    
 <style>
-  <?php include "style.css" ?>
+  <?php include "manage_books.css" ?>
 </style>
 <script>
      <?php include "script.js" ?>
@@ -81,14 +81,14 @@ function decreasePrice(id) {
                     <td><?php echo $book['link']; ?></td>
                     <td class="action-buttons">
                         <button onclick="deleteBook(<?php echo $book['id']; ?>)">Delete</button>
-                        <!-- <button onclick="increasePrice(<?php echo $book['id']; ?>)">Increase Price</button>
-                        <button onclick="decreasePrice(<?php echo $book['id']; ?>)">Decrease Price</button> -->
+                        <button onclick="increasePrice(<?php echo $book['id']; ?>)">Increase Price</button>
+                        <button onclick="decreasePrice(<?php echo $book['id']; ?>)">Decrease Price</button>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p class="no-books">No books found.</p>
+        <p class="no-books">No books found</p>
     <?php endif; ?>
 
     <a href="index.php?action=profile" class="profile-link">Go to Profile</a>

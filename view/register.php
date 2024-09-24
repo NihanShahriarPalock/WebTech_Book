@@ -40,8 +40,7 @@
             <li>
                 <label for="role">Role:</label>
                 <select id="role" name="role">
-                    <option value="admin">Admin</option>
-                    <!-- <option value="content_writer">Content Writer</option> -->
+                    <option value="admin">Admin</option>                   
                     <option value="user">User</option>
                     <option value="delivery_man">Delivery Man</option>
                 </select>

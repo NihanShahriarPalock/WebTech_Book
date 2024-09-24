@@ -98,24 +98,6 @@ function getAllBooks() {
 }
 
 
-function createReportsTable() {
-    $conn = connectToDatabase();
-    try {
-        $sql = "CREATE TABLE IF NOT EXISTS reports (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            content_writer_id INT(6) NOT NULL,
-            title VARCHAR(255) NOT NULL,
-            content TEXT,
-            status ENUM('Pending', 'Approved', 'Dismissed') DEFAULT 'Pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )";
-        $conn->exec($sql);
-    } catch(PDOException $e) {
-        echo "Error creating 'reports' table: " . $e->getMessage();
-    }
-}
-
-createReportsTable();
 
 
 function getUserByToken($token) {
@@ -146,10 +128,7 @@ function createUsersTable() {
     }
 }
 
-
-
 createUsersTable();
-
 
 function createBooksTable() {
     $conn = connectToDatabase();
@@ -223,15 +202,7 @@ function getUserByUsername($username) {
     return $user;
 }
 
-// function getContentWriter($username) {
-//     $conn = connectToDatabase();
 
-//     $stmt = $conn->prepare("SELECT * FROM content_writers WHERE username = :username");
-//     $stmt->bindParam(':username', $username);
-//     $stmt->execute();
-//     $contentWriter = $stmt->fetch(PDO::FETCH_ASSOC);
-//     return $contentWriter;
-// }
 function deleteUserByUsername($username) {
     $conn = connectToDatabase();
 
@@ -305,7 +276,6 @@ function updateUserPassword($email, $newPassword) {
 
 
 
-
 function createDeliveryManTable() {
     $conn = connectToDatabase();
     try {
@@ -365,7 +335,6 @@ function manageDeliveryMan() {
 
     require_once '../webtech_project/view/manage_delivery_man.php';
 }
-
 
 function getDeliveryMen() {
     $conn = connectToDatabase();
@@ -429,40 +398,6 @@ function decreasePrice($id) {
     }
 }
 
-function getTotalBooks() {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->query("SELECT COUNT(*) AS total_books FROM books");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total_books'];
-    } catch(PDOException $e) {
-        echo "Error retrieving total books: " . $e->getMessage();
-        return 0;
-    }
-}
 
-function getTotalContentWriters() {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->query("SELECT COUNT(*) AS total_content_writers FROM content_writers");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total_content_writers'];
-    } catch(PDOException $e) {
-        echo "Error retrieving total content writers: " . $e->getMessage();
-        return 0;
-    }
-}
-
-function getTotalDeliveryMen() {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->query("SELECT COUNT(*) AS total_delivery_men FROM delivery_mans");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total_delivery_men'];
-    } catch(PDOException $e) {
-        echo "Error retrieving total delivery men: " . $e->getMessage();
-        return 0;
-    }
-}
 
 ?>
