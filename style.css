@@ -1,0 +1,283 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+.menu {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #0056b3;
+}
+
+h2 {
+  color: red;
+}
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2.welcome {
+  color: #333;
+  margin-top: 0;
+}
+
+h3.section-title {
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Dashboard Styles */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.dashboard-table th {
+  background-color: #f2f2f2;
+}
+
+/* Profile Information Styles */
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.profile-table th,
+.profile-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.profile-table th {
+  background-color: #f2f2f2;
+}
+
+.edit-link,
+.delete-link,
+.change-pass-link,
+.manage-delivery-link,
+.manage-books-link,
+.manage-content-writers-link,
+.sales-history-link,
+.logout-link {
+  text-decoration: none;
+  color: #007bff;
+  margin-right: 10px;
+}
+
+.menu:hover,
+.edit-link:hover,
+.delete-link:hover,
+.change-pass-link:hover,
+.manage-delivery-link:hover,
+.manage-books-link:hover,
+.manage-content-writers-link:hover,
+.sales-history-link:hover,
+.logout-link:hover {
+  color: #0056b3;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #ff6600;
+  text-align: center;
+}
+
+label {
+  color: #333;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #0056b3;
+}
+
+#error1,
+#error2 {
+  font-size: 14px;
+}
+
+#password_error {
+  font-size: 14px;
+}
+
+div.error-message {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+
+#username_error,
+#password_error {
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-right: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.action-buttons {
+  text-align: center;
+}
+
+.action-buttons button {
+  margin: 5px;
+}
+
+p.no-books {
+  text-align: center;
+  margin-top: 20px;
+  color: #888;
+}
+
+.profile-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.profile-link:hover {
+  color: #0056b3;
+}
+#searchTerm {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  color: #888;
+  margin-top: 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.login-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-links h3 {
+  margin: 10px 0;
+  color: #007bff;
+  font-size: 16px;
+}
+
+.login-links a {
+  color: #218dff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.login-links a:hover {
+  color: #0056b3;
+}
