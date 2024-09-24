@@ -116,18 +116,7 @@ function createReportsTable() {
 }
 
 createReportsTable();
-function searchContentWriters($searchTerm) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("SELECT * FROM content_writers WHERE username LIKE :searchTerm OR email LIKE :searchTerm");
-        $stmt->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error searching content writers: " . $e->getMessage();
-        return false;
-    }
-}
+
 
 function getUserByToken($token) {
     $conn = connectToDatabase();
@@ -234,15 +223,15 @@ function getUserByUsername($username) {
     return $user;
 }
 
-function getContentWriter($username) {
-    $conn = connectToDatabase();
+// function getContentWriter($username) {
+//     $conn = connectToDatabase();
 
-    $stmt = $conn->prepare("SELECT * FROM content_writers WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $contentWriter = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $contentWriter;
-}
+//     $stmt = $conn->prepare("SELECT * FROM content_writers WHERE username = :username");
+//     $stmt->bindParam(':username', $username);
+//     $stmt->execute();
+//     $contentWriter = $stmt->fetch(PDO::FETCH_ASSOC);
+//     return $contentWriter;
+// }
 function deleteUserByUsername($username) {
     $conn = connectToDatabase();
 
@@ -314,23 +303,7 @@ function updateUserPassword($email, $newPassword) {
     $stmt->execute();
 }
 
-function createContentWritersTable() {
-    $conn = connectToDatabase();
-    try {
-        $sql = "CREATE TABLE IF NOT EXISTS content_writers (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(30) NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            email VARCHAR(50),
-            reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )";
-        $conn->exec($sql);
-    } catch(PDOException $e) {
-        echo "Error creating 'content_writers' table: " . $e->getMessage();
-    }
-}
 
-createContentWritersTable();
 
 
 function createDeliveryManTable() {
@@ -365,268 +338,11 @@ function addDeliveryManWriter($username, $password, $email) {
 
         echo "DEBUG: Inserted deliveryMan. Username: $username, Email: $email";
 
-       
-
         header("Location: index.php?action=manage_delivery_man&message=Delivery Man added successfully.");
         exit;
 
     } catch(PDOException $e) {
         return "Error adding delivery Man: " . $e->getMessage();
-    }
-}
-
-
-function addContentWriter($username, $password, $email) {
-    $conn = connectToDatabase();
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    try {
-        $stmt = $conn->prepare("INSERT INTO content_writers (username, password, email) VALUES (:username, :password, :email)");
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-
-        echo "DEBUG: Inserted content writer. Username: $username, Email: $email";
-
-        $contentWriter = getContentWriter($username);
-        if ($contentWriter) {
-
-            echo "DEBUG: Retrieved content writer. id: {$contentWriter['id']}  Username: {$contentWriter['username']}, Email: {$contentWriter['email']}";
-
-            generateDummyReportsForContentWriter($contentWriter['id']);
-        } else {
-
-            echo "DEBUG: Failed to retrieve the newly added content writer. Username: $username, Email: $email";
-            return "Error: Failed to retrieve the newly added content writer.";
-        }
-
-        header("Location: index.php?action=manage_content_writers&message=Content writer added successfully.");
-        exit;
-
-    } catch(PDOException $e) {
-        return "Error adding content writer: " . $e->getMessage();
-    }
-}
-
-function getContentWriterById($contentWriterId) {
-    $conn = connectToDatabase();
-
-    try {
-        $stmt = $conn->prepare("SELECT * FROM content_writers WHERE id = :id");
-        $stmt->bindParam(':id', $contentWriterId);
-        $stmt->execute();
-
-        $contentWriter = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $contentWriter;
-    } catch(PDOException $e) {
-        // Handle the exception if needed
-        echo "Error retrieving content writer: " . $e->getMessage();
-        return false;
-    }
-}
-
-
-
-function banContentWriter($username) {
-    if(empty($username)) {
-        header("Location: index.php?action=manage_content_writers&message=Username is required.");
-        exit;
-    }
-
-    $conn = connectToDatabase();
-
-    try {
-        // Find the content writer by username
-        $stmt = $conn->prepare("SELECT id FROM content_writers WHERE username = :username");
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $contentWriter = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$contentWriter) {
-            header("Location: index.php?action=manage_content_writers&message=User not found.");
-            exit;
-        }
-
-        $user_id = $contentWriter['id'];
-
-      
-        $stmt = $conn->prepare("DELETE FROM content_writers WHERE id = :user_id");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-
-
-        $stmt = $conn->prepare("DELETE FROM content_writers WHERE id = :user_id");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-
-        header("Location: index.php?action=manage_content_writers&message=Content writer banned successfully.");
-        exit;
-    } catch(PDOException $e) {
-        header("Location: index.php?action=manage_content_writers&message=Error banning content writer: " . $e->getMessage());
-        exit;
-    }
-}
-
-function getContentWriters() {
-    $conn = connectToDatabase();
-
-    try {
-        $stmt = $conn->query("SELECT * FROM content_writers");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error retrieving content writers: " . $e->getMessage();
-        return false;
-    }
-}
-
-function createReport($title, $content) {
-    $conn = connectToDatabase();
-
-    try {
-        if (!isset($_COOKIE['username'])) {
-            throw new Exception("User not logged in.");
-        }
-
-        $username = $_COOKIE['username'];
-
-        // Get the user ID of the content writer
-        $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$user) {
-            throw new Exception("User not found.");
-        }
-
-        $content_writer_id = $user['id'];
-
-        $stmt = $conn->prepare("INSERT INTO reports (content_writer_id, title, content) VALUES (:content_writer_id, :title, :content)");
-        $stmt->bindParam(':content_writer_id', $content_writer_id);
-        $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':content', $content);
-        $stmt->execute();
-
-        return true;
-    } catch(PDOException $e) {
-        throw new Exception("Error creating report: " . $e->getMessage());
-    }
-}
-
-
-function generateDummyReportsForContentWriter($contentWriterId) {
-    $conn = connectToDatabase();
-
-    try {
-
-        $dummyReports = array(
-            array("Dummy Report 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."),
-            array("Dummy Report 2", "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-        );
-
-
-        $stmt = $conn->prepare("INSERT INTO reports (content_writer_id, title, content) VALUES (:content_writer_id, :title, :content)");
-        $stmt->bindParam(':content_writer_id', $contentWriterId);
-
-
-        foreach ($dummyReports as $report) {
-            $stmt->bindParam(':title', $report[0]);
-            $stmt->bindParam(':content', $report[1]);
-            if (!$stmt->execute()) {
-                throw new Exception("Error executing query: " . implode(" - ", $stmt->errorInfo()));
-            }
-            echo "Dummy report added for content writer ID: $contentWriterId<br>";
-        }
-
-        return true;
-    } catch(Exception $e) {
-        echo "Error generating dummy reports: " . $e->getMessage() . "<br>";
-        return false;
-    }
-}
-
-
-function getReportsByContentWriterId($contentWriterId) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("SELECT * FROM reports WHERE content_writer_id = :content_writer_id");
-        $stmt->bindParam(':content_writer_id', $contentWriterId);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error retrieving reports: " . $e->getMessage();
-        return false;
-    }
-}
-
-
-function getAllReports() {
-    $conn = connectToDatabase();
-
-    try {
-        $stmt = $conn->query("SELECT * FROM reports");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error retrieving reports: " . $e->getMessage();
-        return false;
-    }
-}
-
-
-
-
-function getReportById($reportId) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("SELECT * FROM reports WHERE id = :report_id");
-        $stmt->bindParam(':report_id', $reportId);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error retrieving report: " . $e->getMessage();
-        return false;
-    }
-}
-
-function approveReportById($reportId) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("UPDATE reports SET status = 'Approved' WHERE id = :report_id");
-        $stmt->bindParam(':report_id', $reportId);
-        $stmt->execute();
-        return true;
-    } catch(PDOException $e) {
-        echo "Error approving report: " . $e->getMessage();
-        return false;
-    }
-}
-
-function dismissReportById($reportId) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("DELETE FROM reports WHERE id = :report_id");
-        $stmt->bindParam(':report_id', $reportId);
-        $stmt->execute();
-        return true;
-    } catch(PDOException $e) {
-        echo "Error dismissing report: " . $e->getMessage();
-        return false;
-    }
-}
-
-function getReportsByContentWriterUsername($username) {
-    $conn = connectToDatabase();
-    try {
-        $stmt = $conn->prepare("SELECT * FROM reports WHERE content_writer_username = :username");
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Error retrieving reports: " . $e->getMessage();
-        return false;
     }
 }
 

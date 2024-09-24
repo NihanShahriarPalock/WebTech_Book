@@ -37,41 +37,11 @@ function handleAction($action) {
         case 'reset_password':
             resetPassword();
             break;
-        case 'add_content_writer':
-            require_once '../webtech_project/view/add_content_writer.php';
-            break;
-        case 'manage_content_writers':
-            manageContentWriters();
-            break;
-        case 'add_report':
-            addReport();
-            break;
+    
              case 'sales_history':
             showSalesHistory();
             break;
-        case 'add_content_writer_submit':
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $email = $_POST['email'];
-    
-        $message = addContentWriter($username, $password, $email);
-        echo $message;
-           
-    }
-    break;
-     case 'view_report':
-            viewReport();
-            break;
-        case 'approve_report':
-            approveReport();
-            break;
-        case 'dismiss_report':
-            dismissReport();
-            break;
-            case 'view_reports':
-            viewReports();
-            break;
+   
             case 'add_delivery_man';
             require_once '../webtech_project/view/add_delivery_man.php';
             break;
@@ -98,45 +68,7 @@ case 'ban_delivery_man':
         echo "Username is required.";
     }
     break;
-case 'manage_content_writers':
-    
-    if (!isAdmin()) {
-        echo "Permission denied.";
-        return;
-    }
 
-    if (isset($_GET['message'])) {
-        $message = $_GET['message'];
-    } else {
-        $message = "";
-    }
-
-    $contentWriters = getContentWriters();
-    if ($contentWriters) {
-        foreach ($contentWriters as &$contentWriter) {
-            $reports = getReportsByContentWriterId($contentWriter['id']);
-            $contentWriter['reports'] = $reports;
-        }
-    }
-
-    require_once '../webtech_project/view/manage_content_writers.php';
-    break;
-        case 'ban_content_writer':
-            if (isset($_GET['username'])) {
-                banContentWriter($_GET['username']);
-            } else {
-                echo "Username is required.";
-            }
-            break;
-             case 'login_content_writer':
-            loginContentWriter();
-            break;
-            case 'search_content_writers':
-    if (isset($_GET['searchTerm'])) {
-        $searchTerm = $_GET['searchTerm'];
-        $contentWriters = searchContentWriters($searchTerm);
-        echo json_encode($contentWriters);
-    }
 
      case 'deleteBook':
             if (isset($_GET['id'])) {
@@ -185,41 +117,7 @@ function getTotalSales() {
     }
 }
 
-function loginContentWriter() {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
 
-        $user = getUserByUsername($username);
-        if ($user && password_verify($password, $user['password'])) {
-            if ($user['role'] == 'content_writer') {
-                // Set a session variable to identify the user as a content writer
-                $_SESSION['content_writer'] = $username;
-                // Redirect to the content writer dashboard
-                header('Location: index.php?action=content_writer_dashboard');
-                exit;
-            } else {
-                $error = "Invalid username or password.";
-            }
-        } else {
-            $error = "Invalid username or password.";
-        }
-    }
-
-    // Load the login page for content writers
-    require_once '../webtech_project/view/login_content_writer.php';
-}
-
-function contentWriterDashboard() {
-    // Check if the user is logged in as content writer
-    if (!isset($_SESSION['content_writer'])) {
-        header('Location: index.php?action=login_content_writer');
-        exit;
-    }
-
-    // Load content writer dashboard
-    require_once '../webtech_project/view/content_writer_dashboard.php';
-}
 
 
 function manageBooks() {
@@ -235,93 +133,10 @@ function manageBooks() {
         $message = "";
     }
 
-  
-
     $books = getAllBooks();
-
     require_once '../webtech_project/view/manage_books.php';
 }
 
-
-function manageContentWriters() {
-    // Check if the current user is an admin
-    if (!isAdmin()) {
-        echo "Permission denied.";
-        return;
-    }
-
-    if (isset($_GET['message'])) {
-        $message = $_GET['message'];
-    } else {
-        $message = "";
-    }
-
-    // Check if a new content writer was added
-    if (isset($_GET['username'])) {
-        $username = $_GET['username'];
-        $contentWriter = getUserByUsername($username);
-        if ($contentWriter) {
-            // Generate dummy reports for the new content writer
-            generateDummyReportsForContentWriter($contentWriter['id']);
-        }
-    }
-
-    // Retrieve all content writers
-    $contentWriters = getContentWriters();
-    $reports = getAllReports();
-
-    require_once '../webtech_project/view/manage_content_writers.php';
-}
-
-function viewReport() {
-    if (isset($_GET['report_id'])) {
-        $reportId = $_GET['report_id'];
-        $report = getReportById($reportId);
-        // Load view for viewing report
-        require_once '../webtech_project/view/view_report.php';
-    } else {
-        echo "Report ID is required.";
-    }
-}
-
-function approveReport() {
-    if (isset($_GET['report_id'])) {
-        $reportId = $_GET['report_id'];
-        if (approveReportById($reportId)) {
-            echo "Report approved successfully.";
-        } else {
-            echo "Error approving report.";
-        }
-    } else {
-        echo "Report ID is required.";
-    }
-}
-
-function dismissReport() {
-    if (isset($_GET['report_id'])) {
-        $reportId = $_GET['report_id'];
-        if (dismissReportById($reportId)) {
-            echo "Report dismissed successfully.";
-        } else {
-            echo "Error dismissing report.";
-        }
-    } else {
-        echo "Report ID is required.";
-    }
-}
-
-function addReport() {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $title = $_POST['title'];
-        $content = $_POST['content'];
-
-        if (createReport($title, $content)) {
-            echo "Report created successfully.";
-        } else {
-            echo "Error creating report.";
-        }
-    }
-}
 
 function isAdmin() {
     // Check if the user is an admin
@@ -538,25 +353,18 @@ function loginUser() {
 
         $user = getUserByUsername($username);
         if ($user) {
-            if (password_verify($password, $user['password'])) {
-                // Check if logging in as a content writer
-                if (isset($_POST['login_content_writer'])) {
-                    if (isContentWriter($username)) {
-                        // Set content writer cookie or session
-                        setcookie('content_writer', $username, time() + (86400 * 30), "/");
-                        header('Location: index.php?action=manage_content_writers');
-                        exit;
-                    } else {
-                        $error = "You are not authorized to login as a content writer.";
-                    }
-                } else {
-                    // Set user cookie or session
+            if (password_verify($password, $user['password'])) {            
+                if (isset($_POST)) {
+                   // Set user cookie or session
                     setcookie('username', $username, time() + (86400 * 30), "/");
                     header('Location: index.php?action=profile');
-                    exit;
+                    exit;                 
+                } else {                   
+                     header('Location: index.php?action=login');
+                   
                 }
             } else {
-                $error = "Invalid password.";
+                $error = "Invalid password";
             }
         } else {
             $error = "User not found.";
@@ -566,38 +374,11 @@ function loginUser() {
     require_once '../webtech_project/view/login.php';
 }
 
-function isContentWriter($username) {
-    $user = getUserByUsername($username);
-    return ($user && $user['role'] == 'content_writer');
-}
-
-
-
-
-function viewReports() {
-    if (isset($_GET['id'])) {
-        $username = $_GET['id'];
-        $contentWriter = getContentWriterById($username);
-        if ($contentWriter) {
-            $reports = getReportsByContentWriterId($contentWriter['id']);
-            require_once '../webtech_project/view/view_reports.php';
-        } else {
-            echo "Content writer not found.";
-        }
-    } else {
-        echo "Username is required.";
-    }
-}
-
-
-
 
 function logout() {
     setcookie('username', '', time() - 3600, "/");
     header('Location: index.php?action=login');
     exit;
 }
-
-
 
 ?>

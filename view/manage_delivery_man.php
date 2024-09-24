@@ -6,7 +6,7 @@
     <title>Manage Delivery Men</title>
     
 <style>
-  <?php include "style.css" ?>
+  <?php include "manage_delivery_man.css" ?>
 </style>
 <script>
      <?php include "script.js" ?>
@@ -18,6 +18,9 @@
      <div class="container">
         <h1>Manage Delivery Men</h1>
     <a href="index.php?action=add_delivery_man">Add Delivery Man</a>
+    <br>
+<br>
+<br>
 
     
     <?php if (isset($_GET['message'])): ?>
@@ -39,7 +42,9 @@
             </tr>
         <?php endforeach; ?>
     </table>
-
+<br>
+<br>
+<br>
     <a href="index.php?action=profile">Back to Home</a>
     </div>
    </div>
